@@ -49,10 +49,14 @@ class VisionStem(nn.Module):
         )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        """x: (B, T, C, H, W) -> (B, T, embed)."""
+        """x: (B, T, C, H, W) or (T, C, H, W) -> (B, T, embed) / (1, T, embed)."""
+        unbatched = x.dim() == 4
+        if unbatched:
+            x = x.unsqueeze(0)
         B, T, C, H, W = x.shape
         out = self.features(x.reshape(B * T, C, H, W))
-        return out.view(B, T, -1)
+        out = out.view(B, T, -1)
+        return out.squeeze(0) if unbatched else out
 
 
 class AudioStem(nn.Module):
@@ -71,6 +75,8 @@ class AudioStem(nn.Module):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """x: (B, F, T) -> (B, L, embed)."""
+        if x.dim() == 2:              # (F, T) -> (1, F, T)
+            x = x.unsqueeze(0)
         out = self.conv(x)            # (B, embed, L)
         return out.transpose(1, 2)    # (B, L, embed)
 
@@ -95,6 +101,11 @@ class SparseFrameAttention(nn.Module):
         return torch.cat([pad, diff.abs()], dim=1)  # (B, T)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        if x.dim() == 2:                # (T, D) unbatched
+            x = x.unsqueeze(0)
+            squeezed = True
+        else:
+            squeezed = False
         _, T, D = x.shape
         k = max(2, int(T * self.keep_ratio))
         activity = self._activity(x)
@@ -105,7 +116,8 @@ class SparseFrameAttention(nn.Module):
         out = self.norm(gathered + attended)
         out = out + self.ffn(out)
         # broadcast attended representation back to all frames (mean pool)
-        return out.mean(dim=1)                              # (B, D)
+        out = out.mean(dim=1)                               # (B, D)
+        return out.squeeze(0) if squeezed else out
 
 
 class SyncEncoder(nn.Module):

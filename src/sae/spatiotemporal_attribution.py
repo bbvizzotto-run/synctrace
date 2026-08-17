@@ -294,8 +294,8 @@ class SpatiotemporalAttributionEngine:
                           key=lambda r: attrib["region_scores"][r][0].sum().item())
         miou_s = region_iou(best_region, gt_region)
 
-        # anomaly AUROC (frame-level: GT temporal mask)
-        score = attrib["anomaly_score"][0]
+        # anomaly AUROC (frame-level: frame saliency vs GT temporal mask)
+        score = attrib["frame_saliency"][0]
         auroc = auroc_simple(score, gt_1d.bool()) if gt_1d.any() else 0.0
         return LocalizationMetrics(miou_temporal=miou_t, miou_spatial=miou_s,
                                    precision_at_k=patk, auroc=auroc)

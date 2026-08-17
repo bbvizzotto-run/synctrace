@@ -1,0 +1,52 @@
+{
+  "severity_ablation": {
+    "0.0": {
+      "anomaly_mean": 1.131371027440764e-05,
+      "severity_mae": 0.9999998807907104,
+      "localization_miou": 0.23311237373737376,
+      "precision_at_k": 0.59375
+    },
+    "0.25": {
+      "anomaly_mean": 1.131371027440764e-05,
+      "severity_mae": 0.7499998807907104,
+      "localization_miou": 0.23311237373737376,
+      "precision_at_k": 0.59375
+    },
+    "0.5": {
+      "anomaly_mean": 1.131371027440764e-05,
+      "severity_mae": 0.49999988079071045,
+      "localization_miou": 0.23311237373737376,
+      "precision_at_k": 0.59375
+    },
+    "0.75": {
+      "anomaly_mean": 1.131371027440764e-05,
+      "severity_mae": 0.24999988079071045,
+      "localization_miou": 0.23311237373737376,
+      "precision_at_k": 0.59375
+    },
+    "1.0": {
+      "anomaly_mean": 1.131371027440764e-05,
+      "severity_mae": 1.1920928955078125e-07,
+      "localization_miou": 0.23311237373737376,
+      "precision_at_k": 0.59375
+    }
+  },
+  "detection": {
+    "auc": 0.5,
+    "eer": 1.0,
+    "average_precision": 0.32223382592201233
+  },
+  "efficiency": {
+    "latency_ms": 10.174768999968364,
+    "flops_gflops_25fps": 0.025,
+    "params_m": 1.29904
+  },
+  "config": {
+    "config": "config/train.yaml",
+    "device": "cpu",
+    "n_test": 16,
+    "model_ckpt": null,
+    "mode": "synthetic",
+    "warmup_epochs": 2
+  }
+}
