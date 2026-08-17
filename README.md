@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="assets/synctrace_logo.png" alt="SyncTrace — A DeepFake detector" width="420"/>
+</div>
+
 # SyncTrace — Lightweight Cross-Modal Contrastive Forensics for Real-Time Audio-Visual Deepfake Detection
 
 SyncTrace detects, localizes and explains audio-visual deepfakes by learning the
