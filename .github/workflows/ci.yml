@@ -18,9 +18,10 @@ jobs:
           pip install -q ruff pytest
       - run: ruff check src/ || true
       - run: ruff check tests/ || true
-      - name: Install torch CPU and run tests
+      - name: Install torch CPU and dependencies, run tests
         run: |
           pip install -q torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+          pip install -q pyyaml opencv-python-headless
           if [ -d tests ]; then pytest tests/ -q; fi
       - name: Smoke training (1 epoch, CPU)
         run: |
