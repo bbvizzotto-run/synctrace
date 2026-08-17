@@ -12,7 +12,6 @@ import yaml
 
 from src.cml.contrastive_misalignment_learner import ContrastiveMisalignmentLearner
 from src.sae.spatiotemporal_attribution import AttributionDecoder
-from src.data.pseudo_forgery_generator import ForgeryRecipe, PseudoForgeryGenerator
 
 
 class SyncEncoderStub(torch.nn.Module):
@@ -53,7 +52,6 @@ def main() -> None:
     opt = torch.optim.Adam(list(model.parameters()) + list(attrib.parameters()),
                            lr=1e-3)
 
-    gen = PseudoForgeryGenerator(seed=42)
     # synthetic mini-batch demo (replace with dataset loaders in production)
     for epoch in range(args.epochs):
         losses = []
@@ -75,7 +73,7 @@ def main() -> None:
     (report / f"run_embed{args.embed_dim}_margin{args.margin}.yaml").write_text(
         yaml.dump({"epochs": args.epochs, "mean_loss": avg,
                    "config": vars(args)}, default_flow_style=False))
-    print("METRIC final_loss=%.4f" % avg)
+    print(f"METRIC final_loss={avg:.4f}")
 
 
 if __name__ == "__main__":

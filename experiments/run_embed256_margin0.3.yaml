@@ -1,0 +1,8 @@
+config:
+  config: config/train.yaml
+  device: cpu
+  embed_dim: 256
+  epochs: 1
+  margin: 0.3
+epochs: 1
+mean_loss: 0.7699879854917526

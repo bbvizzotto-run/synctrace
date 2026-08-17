@@ -12,9 +12,7 @@ pseudo-forgery generator (severity-controlled replacements).
 """
 
 import torch
-import torch.nn as nn
-import torch.nn.functional as F
-import numpy as np
+from torch import nn
 
 
 class AttributionDecoder(nn.Module):
@@ -85,7 +83,7 @@ class SpatiotemporalAttributionEngine:
 
         # spectral band energy in 4 mel bands per frame
         mel = audio if audio.dim() == 3 else audio.unsqueeze(1)
-        B, C, T, F = mel.shape
+        _, _, _, F = mel.shape
         band_edges = torch.linspace(0, F, 5, device=mel.device).long()
         band_scores = []
         for i in range(4):

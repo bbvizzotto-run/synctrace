@@ -1,0 +1,36 @@
+# SyncTrace training configuration
+# All hyperparameters live here — no free CLI flags allowed.
+
+seed: 42
+
+model:
+  embed_dim: 256
+  projection_dim: 128
+  num_frames: 16
+  frame_size: 112
+
+contrastive:
+  base_margin: 0.3
+  max_margin: 1.2
+  severity_weight: 0.5
+
+training:
+  epochs: 50
+  batch_size: 16
+  lr: 1.0e-3
+  device: cuda
+  mixed_precision: true
+
+data:
+  benchmark: fakeavceleb            # fakeavceleb | avlipsync-timit
+  root: /data/fakeavceleb           # overridden per environment
+  sample_rate: 16000
+  max_duration_s: 8.0
+  max_frames: 16
+  fps: 25.0
+  generator:
+    backend: mediapipe              # opencv | mediapipe
+    seed: 42
+    severities: [0.0, 0.3, 0.6, 1.0]
+    regions: [lips, lower_face]
+    manipulate_frames_ratio: 0.6
