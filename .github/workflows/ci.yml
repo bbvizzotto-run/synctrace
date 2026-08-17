@@ -22,10 +22,10 @@ jobs:
         run: |
           pip install -q torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
           pip install -q pyyaml opencv-python-headless
-          if [ -d tests ]; then pytest tests/ -q; fi
+          if [ -d tests ]; then PYTHONPATH=. pytest tests/ -q; fi
       - name: Smoke training (1 epoch, CPU)
         run: |
-          python -m src.engine.train --epochs 1 --device cpu
+          PYTHONPATH=. python -m src.engine.train --epochs 1 --device cpu
 
   benchmark:
     needs: lint-and-test
