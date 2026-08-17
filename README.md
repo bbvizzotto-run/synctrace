@@ -29,7 +29,7 @@ signal and the automatic ground truth for localization evaluation.
 
 ```
 config/                       Declarative YAML configuration (train.yaml)
-paper/                        LaTeX manuscript (sn-jnl / MTAP template) + pipeline figure
+paper/                        Snapshot PDF do manuscrito (fonte LaTeX no Overleaf/Prism)
 src/
   encoder/                    SyncEncoder — Mamba–Attention hybrid backbone
   cml/                        Contrastive Misalignment Learner + severity regressor
