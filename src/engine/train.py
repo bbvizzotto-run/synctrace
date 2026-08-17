@@ -11,27 +11,8 @@ import torch
 import yaml
 
 from src.cml.contrastive_misalignment_learner import ContrastiveMisalignmentLearner
+from src.encoder.sync_encoder import SyncEncoder
 from src.sae.spatiotemporal_attribution import AttributionDecoder
-
-
-class SyncEncoderStub(torch.nn.Module):
-    """Stub encoder: replace with the Mamba-Attention hybrid backbone.
-
-    Projects audio and video to the same embed_dim via separate LazyLinears
-    (each learns its own input shape on first forward pass) and sums them.
-    """
-
-    def __init__(self, embed_dim: int = 256):
-        super().__init__()
-        self.video_proj = torch.nn.Sequential(torch.nn.Flatten(),
-                                              torch.nn.LazyLinear(embed_dim),
-                                              torch.nn.GELU())
-        self.audio_proj = torch.nn.Sequential(torch.nn.Flatten(),
-                                              torch.nn.LazyLinear(embed_dim),
-                                              torch.nn.GELU())
-
-    def forward(self, audio, video):
-        return self.video_proj(video) + self.audio_proj(audio)
 
 
 def main() -> None:
@@ -46,7 +27,7 @@ def main() -> None:
     torch.manual_seed(42)
     device = torch.device(args.device)
 
-    encoder = SyncEncoderStub(embed_dim=args.embed_dim)
+    encoder = SyncEncoder(embed_dim=args.embed_dim)
     model = ContrastiveMisalignmentLearner(encoder, embed_dim=args.embed_dim)
     attrib = AttributionDecoder(args.embed_dim)
     opt = torch.optim.Adam(list(model.parameters()) + list(attrib.parameters()),
@@ -56,8 +37,8 @@ def main() -> None:
     for epoch in range(args.epochs):
         losses = []
         for _ in range(4):
-            a = torch.randn(2, 1, 16, 80, device=device)
-            v = torch.randn(2, 16, 112, 112, device=device)
+            a = torch.randn(2, 80, 320, device=device)
+            v = torch.randn(2, 16, 3, 112, 112, device=device)
             sev = torch.tensor([0.3, 0.7], device=device)
             out = model(a, v, a, v, a, v, sev)
             opt.zero_grad()

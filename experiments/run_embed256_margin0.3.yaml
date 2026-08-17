@@ -5,4 +5,4 @@ config:
   epochs: 1
   margin: 0.3
 epochs: 1
-mean_loss: 0.7699879854917526
+mean_loss: 0.7700080424547195
