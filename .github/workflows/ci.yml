@@ -1,0 +1,55 @@
+# SyncTrace CI — lint, unit tests and a CPU smoke training run
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: |
+          pip install -q ruff pytest torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+          ruff check src/ tests/ || true
+          pytest tests/ -q
+      - name: Smoke training (1 epoch, CPU)
+        run: |
+          python -m src.engine.train --config config/train_smoke.yaml --epochs 1 --device cpu
+
+  benchmark:
+    needs: lint-and-test
+    if: github.ref_type == 'tag' && startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: |
+          pip install -q -r requirements.txt
+          python -m src.engine.benchmark --config config/benchmark.yaml \
+            --output experiments/benchmark_$(date +%Y%m%d_%H%M).md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-report
+          path: experiments/benchmark_*.md
+
+  paper-pdf:
+    runs-on: ubuntu-latest
+    if: contains(github.event.head_commit.message, '[paper]')
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile LaTeX manuscript
+        run: |
+          sudo apt-get install -y -q texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended > /dev/null
+          cd papers && pdflatex -interaction=nonstopmode synctrace.tex && pdflatex synctrace.tex
+      - uses: actions/upload-artifact@v4
+        with:
+          name: manuscript-pdf
+          path: papers/synctrace.pdf

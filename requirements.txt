@@ -1,0 +1,8 @@
+torch>=2.2
+torchvision
+torchaudio
+opencv-python-headless
+numpy
+pyyaml
+tqdm
+pillow

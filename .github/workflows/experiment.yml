@@ -1,0 +1,72 @@
+# SyncTrace Experiment Runner — grid of hyperparameters, GPU runner
+# Trigger manually from the Manus agent (or a PR comment via workflow_dispatch)
+name: Experiment
+
+on:
+  workflow_dispatch:
+    inputs:
+      grid:
+        description: "JSON grid, e.g. {\"embed_dim\":[128,256],\"margin\":[0.3,0.5]}"
+        required: false
+        default: '{"embed_dim":[256],"margin":[0.3]}'
+      epochs:
+        description: "Training epochs"
+        required: false
+        default: "10"
+
+jobs:
+  run-experiment:
+    runs-on:
+      - self-hosted  # GPU runner (bring-your-own or cloud GPU action)
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Expand grid and run experiments
+        id: grid
+        run: |
+          python - <<'EOF'
+          import json, itertools, subprocess, os, sys
+          grid = json.loads('${{ github.event.inputs.grid }}')
+          epochs = '${{ github.event.inputs.epochs }}'
+          keys, values = grid.keys(), grid.values()
+          results = []
+          for combo in itertools.product(*values):
+              cfg = dict(zip(keys, combo))
+              run_id = "_".join(f"{k}{v}" for k, v in cfg.items())
+              cmd = [sys.executable, "-m", "src.engine.train",
+                     "--config", "config/train.yaml",
+                     "--epochs", epochs, "--device", "cuda"]
+              for k, v in cfg.items():
+                  cmd += [f"--{k}", str(v)]
+              log = f"experiments/run_{run_id}.log"
+              os.makedirs("experiments", exist_ok=True)
+              r = subprocess.run(cmd, capture_output=True, text=True)
+              open(log, "w").write(r.stdout + r.stderr)
+              # metrics are printed as "METRIC <name>=<value>" lines by the engine
+              metrics = {l.split("=",1)[0].split()[-1]: l.split("=",1)[1]
+                         for l in r.stdout.splitlines() if l.startswith("METRIC")}
+              results.append({"run": run_id, "metrics": metrics})
+          import json as _json
+          _json.dump(results, open("experiments/last_grid_results.json","w"), indent=2)
+          print(json.dumps({"runs": len(results)}))
+          EOF
+      - name: Comment PR with metrics
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const res = JSON.parse(fs.readFileSync('experiments/last_grid_results.json'));
+            const body = res.runs.map(r => `Run \`${r.run}\`\n` +
+              Object.entries(r.metrics).map(([k,v]) => `- ${k}: ${v}`).join('\n')
+            ).join('\n---\n');
+            github.rest.issues.createComment({
+              issue_number: context.issue.number, owner: context.repo.owner,
+              repo: context.repo.repo, body: '### Experiment grid results\n' + body
+            });
+      - uses: actions/upload-artifact@v4
+        with:
+          name: experiment-results
+          path: experiments/
