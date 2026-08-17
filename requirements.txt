@@ -6,3 +6,6 @@ numpy
 pyyaml
 tqdm
 pillow
+
+onnx>=1.16
+onnxruntime>=1.19

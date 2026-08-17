@@ -19,3 +19,9 @@ venv/
 
 # OS
 .DS_Store
+
+# Debug / export artifacts
+scripts/debug_*
+scripts/find_bad_node*
+scripts/quantize_fix.py
+artifacts/

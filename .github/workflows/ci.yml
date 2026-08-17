@@ -21,7 +21,7 @@ jobs:
       - name: Install torch CPU and dependencies, run tests
         run: |
           pip install -q torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
-          pip install -q pyyaml opencv-python-headless
+          pip install -q -r requirements.txt
           if [ -d tests ]; then PYTHONPATH=. pytest tests/ -q; fi
       - name: Smoke training (1 epoch, CPU)
         run: |
