@@ -25,3 +25,9 @@ scripts/debug_*
 scripts/find_bad_node*
 scripts/quantize_fix.py
 artifacts/
+
+# LaTeX build artifacts
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/tmin.*
