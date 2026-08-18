@@ -14,4 +14,4 @@
 - [ ] Executar ablações de severidade, Mamba--Attention e Spatiotemporal Attribution Engine.
 - [ ] Comparar qualidade, latência, parâmetros, FLOPs e memória contra baselines multimodais.
 - [ ] Atualizar tabelas, figuras e discussão do manuscrito com resultados verificados.
-- [ ] Executar a suíte de validação e enviar código, resultados e manuscrito atualizados ao repositório remoto.
+- [x] Executar a suíte de validação e enviar código, resultados e manuscrito atualizados ao repositório remoto.
