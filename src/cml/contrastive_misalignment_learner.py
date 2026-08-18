@@ -100,4 +100,5 @@ class ContrastiveMisalignmentLearner(nn.Module):
             "loss_severity": loss_severity.detach(),
             "anomaly_score": anomaly_score,
             "severity_pred": severity_pred.detach(),
+            "anomaly_direction": z_anchor - z_neg,
         }

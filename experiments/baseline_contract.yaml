@@ -1,0 +1,24 @@
+# Baseline outputs are ingested only after each baseline is run under the protocol in PROTOCOL.md.
+# Empty metric values are deliberate placeholders, not experimental results.
+required_output_columns:
+  - method
+  - dataset
+  - seed
+  - auroc
+  - average_precision
+  - eer
+  - params_m
+  - flops_g
+  - latency_ms_median
+  - latency_ms_p95
+  - peak_memory_mb
+methods:
+  - audio_video_xception
+  - cnn_lstm_transformer
+  - cross_modal_transformer
+fairness_requirements:
+  - identical_identity_split
+  - identical_16_frame_112px_input
+  - identical_8_second_logmel_window
+  - same_device_and_batch_size
+  - three_reported_seeds

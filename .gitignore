@@ -25,6 +25,11 @@ scripts/debug_*
 scripts/find_bad_node*
 scripts/quantize_fix.py
 artifacts/
+data/*
+!data/DATASET_NOTICES.md
+experiments/checkpoints/
+experiments/reports/
+experiments/smoke_*.yaml
 
 # LaTeX build artifacts
 paper/*.aux

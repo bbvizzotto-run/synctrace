@@ -1,0 +1,3 @@
+relative_path,label,speaker_id,source
+VideoData/Real/English/speaker_001/clip_001.mp4,real,speaker_001,FakeAVCeleb
+VideoData/FakeVideo/English/speaker_001/clip_001.mp4,fake,speaker_001,FakeAVCeleb

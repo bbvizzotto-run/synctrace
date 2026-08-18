@@ -42,3 +42,4 @@ def test_dataset_synthetic_sample_shape(tmp_path):
     assert 0.0 <= float(item["severity"]) <= 1.0
     assert item["visual_gt"].shape == (16, 112, 112)
     assert item["temporal_gt"].shape == (16,)
+    assert item["attribution_gt"].shape == (16, 7)
