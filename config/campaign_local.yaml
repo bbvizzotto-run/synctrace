@@ -1,0 +1,47 @@
+# SyncTrace Experimental Campaign - Local RTX 5070 Ti Optimization
+project_name: "synctrace-mtap-local"
+experiment_name: "full-campaign-rtx5070ti"
+
+# Model Hyperparameters
+model:
+  backbone: "hybrid-mamba-attention"
+  audio_dim: 128
+  vision_dim: 256
+  fusion_dim: 512
+  dropout: 0.1
+
+# Training Protocol
+training:
+  batch_size: 32  # Optimized for 12GB+ VRAM
+  num_workers: 8   # Take advantage of local CPU cores
+  learning_rate: 0.0001
+  weight_decay: 0.01
+  epochs: 50
+  early_stopping_patience: 7
+  
+# Dataset Config
+datasets:
+  fakeavceleb:
+    enabled: true
+    root: "./data/fakeavceleb"  # Should be overridden by CLI or symlink
+  avtimit:
+    enabled: true
+    root: "./data/avtimit"
+  splits:
+    train: 0.70
+    val: 0.15
+    test: 0.15
+    strategy: "identity-disjoint"
+
+# Metrics
+metrics:
+  - "accuracy"
+  - "auc-roc"
+  - "eer"
+  - "severity-mae"
+  - "miou-explainability"
+
+# Hardware
+hardware:
+  device: "cuda"
+  precision: "mixed"  # Use FP16 for speedup on RTX cards

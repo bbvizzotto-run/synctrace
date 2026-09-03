@@ -9,9 +9,13 @@
 - [x] Registrar a solicitação FakeAVCeleb enviada e manter a campanha oficial bloqueada até a aprovação dos mantenedores.
 - [x] Implementar e validar o protocolo reprodutível, os scripts de ablação e os comparadores sem declarar métricas de benchmark antes do acesso aos dados.
 - [x] Definir splits fixos, sementes, métricas, critérios de parada e comparadores multimodais.
-- [ ] Preparar FakeAVCeleb e AV-LipSync-TIMIT para treinamento e avaliação reprodutíveis.
+- [ ] Criar guia de execução local e script de diagnóstico para a RTX 5070 Ti.
+- [ ] Otimizar configurações de treinamento para o hardware local.
+- [ ] Preparar FakeAVCeleb e AV-LipSync-TIMIT para treinamento e avaliação reprodutíveis no ambiente local.
 - [ ] Executar treinamento completo do SyncTrace e registrar métricas por base e semente.
 - [ ] Executar ablações de severidade, Mamba--Attention e Spatiotemporal Attribution Engine.
 - [ ] Comparar qualidade, latência, parâmetros, FLOPs e memória contra baselines multimodais.
 - [ ] Atualizar tabelas, figuras e discussão do manuscrito com resultados verificados.
 - [x] Executar a suíte de validação e enviar código, resultados e manuscrito atualizados ao repositório remoto.
+- [x] Criar cronograma detalhado de execução para a campanha experimental após a liberação de dados e GPU pela SKKU.
+- [x] Avaliar alternativas locais, online gratuitas e educacionais de GPU para a campanha experimental oficial.
